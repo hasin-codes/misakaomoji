@@ -3,7 +3,7 @@ import streamlit as st
 
 
 st.set_page_config(
-    page_title="MisaKaomoji - Your emotions, with an AI-powered kawaii twist",
+    page_title="MisaKaomoji 🎂",
     page_icon="favicon.ico"
 )
 
