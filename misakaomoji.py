@@ -2,7 +2,10 @@ import openai
 import streamlit as st
 
 
-st.set_page_config(page_title="Your Page Title")
+st.set_page_config(
+    page_title="MisaKaomoji - Your emotions, with an AI-powered kawaii twist",
+    page_icon="favicon.ico"
+)
 
 st.title("MisaKaoMoji")
 st.text("Your emotions, with an AI-powered kawaii twist")
