@@ -1,7 +1,8 @@
 import openai
 import streamlit as st
-
-st.title("ChatGPT-like clone")
+st.beta_set_page_config(page_title='Hello.io',page_icon="favicon")
+st.title("MisaKaoMoji")
+st.text("Your emotions, with an AI-powered kawaii twist")
 
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
