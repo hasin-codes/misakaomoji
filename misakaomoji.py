@@ -1,13 +1,9 @@
 import openai
 import streamlit as st
-from st_pages import Page, show_pages, add_page_title
 
-show_pages(
-    [
-        Page("misakaomoji.py", "MisaKaomoji", "🎂"),
 
-    ]
-)
+st.set_page_config(page_title="Your Page Title")
+
 st.title("MisaKaoMoji")
 st.text("Your emotions, with an AI-powered kawaii twist")
 
