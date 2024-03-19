@@ -1,1 +1,6 @@
-openai==0.28.1
+streamlit
+openai
+llama-index
+llama-index-llms-openai
+nltk
+pypdf
