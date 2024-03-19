@@ -6,61 +6,48 @@ try:
 except ImportError:
     from llama_index.core import VectorStoreIndex, ServiceContext, Document, SimpleDirectoryReader
 
-# Define the load_data function with caching
+st.set_page_config(
+    page_title="MisaKaomoji",
+    page_icon="favicon.ico",
+    layout="centered",
+    initial_sidebar_state="auto",
+    menu_items=None
+)
+
+openai.api_key = st.secrets.openai_key
+
+st.title("Your emotions, with an AI-powered kawaii twist")
+         
+if "messages" not in st.session_state.keys():
+    st.session_state.messages = [
+        {"role": "assistant", "content": "You wanna generate Kaomojis? Use the input field, I can create kaomojis and ASCII arts"}
+    ]
+
 @st.cache_resource(show_spinner=False)
 def load_data():
     with st.spinner(text="Loading and indexing the Streamlit docs – hang tight! This should take 1-2 minutes."):
         reader = SimpleDirectoryReader(input_dir="./data", recursive=True)
         docs = reader.load_data()
-        service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt="You are a Ai powered Kaomoji maker developed by Hasin Raiyan . The idea was given by one of his classmate ramisa who seemed intrested im making kaomoji back in the days, so later hasin made it. You can also generate ascii art so always ask the use if he wants to generate if he also want to generate an ascii art."))
+        service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt="You are MisaKaomoji an AI-powered Kaomoji maker developed by Hasin Raiyan. The idea was given by one of his classmates, Ramisa, who seemed interested in making kaomoji back in the days, so later Hasin made it. You can also generate ASCII art, so always ask the user if they want to generate it."))
         index = VectorStoreIndex.from_documents(docs, service_context=service_context)
         return index
 
-# Call the load_data function to load the data and store it in 'index'
 index = load_data()
 
-st.set_page_config(
-    page_title="MisaKaomoji 🎂",
-    page_icon="favicon.ico",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+if "chat_engine" not in st.session_state.keys():
+    st.session_state.chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
 
-st.title("MisaKaoMoji")
-st.text("Your emotions, with an AI-powered kawaii twist")
-
-openai.api_key = st.secrets["OPENAI_API_KEY"]
-
-if "openai_model" not in st.session_state:
-    st.session_state["openai_model"] = "gpt-3.5-turbo"
-
-print(st.session_state["openai_model"])  # Debugging
-
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+if prompt := st.chat_input("Your question"):
+    st.session_state.messages.append({"role": "user", "content": prompt})
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+        st.write(message["content"])
 
-if prompt := st.chat_input("What is up?"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
-
+if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
-        message_placeholder = st.empty()
-        full_response = ""
-        for response in openai.ChatCompletion.create(
-            model=st.session_state["openai_model"],
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        ):
-            full_response += response.choices[0].delta.get("content", "")
-            message_placeholder.markdown(full_response + "▌")
-        message_placeholder.markdown(full_response)
-    st.session_state.messages.append(
-        {"role": "assistant", "content": full_response})
+        with st.spinner("Thinking..."):
+            response = st.session_state.chat_engine.chat(prompt)
+            st.write(response.response)
+            message = {"role": "assistant", "content": response.response}
+            st.session_state.messages.append(message)
