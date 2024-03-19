@@ -20,6 +20,10 @@ openai.api_key = st.secrets["OPENAI_API_KEY"]
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Initialize openai_model if not present
+if "openai_model" not in st.session_state:
+    st.session_state["openai_model"] = "gpt-3.5-turbo"
+
 # Display previous messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
