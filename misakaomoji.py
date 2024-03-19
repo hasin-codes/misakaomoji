@@ -1,6 +1,6 @@
 import openai
 import streamlit as st
-st.beta_set_page_config(page_title='Hello.io',page_icon="favicon.ico")
+st.beta_set_page_config(page_title='MisaKaomoji')
 st.title("MisaKaoMoji")
 st.text("Your emotions, with an AI-powered kawaii twist")
 
