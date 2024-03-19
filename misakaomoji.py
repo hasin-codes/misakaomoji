@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 
 st.title("MisaKaoMoji")
-st.subheader ("Your emotions, with an AI-powered kawaii twist")
+st.subheader("Your emotions, with an AI-powered kawaii twist")
 
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
