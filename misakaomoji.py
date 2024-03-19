@@ -1,8 +1,6 @@
-st.beta_set_page_config(page_title='MisaKaomoji - Your emotions, with an AI-powered kawaii twist')
-
 import openai
 import streamlit as st
-
+st.beta_set_page_config(page_title='MisaKaomoji - Your emotions, with an AI-powered kawaii twist')
 st.title("MisaKaoMoji")
 st.text("Your emotions, with an AI-powered kawaii twist")
 
