@@ -2,17 +2,28 @@ import streamlit as st
 import openai
 from llama_index.llms.openai import OpenAI
 try:
-  from llama_index import VectorStoreIndex, ServiceContext, Document, SimpleDirectoryReader
+    from llama_index import VectorStoreIndex, ServiceContext, Document, SimpleDirectoryReader
 except ImportError:
-  from llama_index.core import VectorStoreIndex, ServiceContext, Document, SimpleDirectoryReader
+    from llama_index.core import VectorStoreIndex, ServiceContext, Document, SimpleDirectoryReader
 
+# Define the load_data function with caching
+@st.cache_resource(show_spinner=False)
+def load_data():
+    with st.spinner(text="Loading and indexing the Streamlit docs – hang tight! This should take 1-2 minutes."):
+        reader = SimpleDirectoryReader(input_dir="./data", recursive=True)
+        docs = reader.load_data()
+        service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt="You are a Ai powered Kaomoji maker developed by Hasin Raiyan . The idea was given by one of his classmate ramisa who seemed intrested im making kaomoji back in the days, so later hasin made it. You can also generate ascii art so always ask the use if he wants to generate if he also want to generate an ascii art."))
+        index = VectorStoreIndex.from_documents(docs, service_context=service_context)
+        return index
+
+# Call the load_data function to load the data and store it in 'index'
+index = load_data()
 
 st.set_page_config(
     page_title="MisaKaomoji 🎂",
     page_icon="favicon.ico",
     layout="wide",
     initial_sidebar_state="expanded"
-
 )
 
 st.title("MisaKaoMoji")
@@ -27,8 +38,6 @@ print(st.session_state["openai_model"])  # Debugging
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
-
 
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
