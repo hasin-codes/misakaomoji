@@ -1,3 +1,5 @@
+st.beta_set_page_config(page_title='MisaKaomoji - Your emotions, with an AI-powered kawaii twist', page_icon = favicon, layout = 'wide', initial_sidebar_state = 'auto')
+
 import openai
 import streamlit as st
 
