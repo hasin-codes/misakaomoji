@@ -27,7 +27,7 @@ print(st.session_state["openai_model"])  # Debugging
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-@st.cache_resource(show_spinner=False)
+
 
 
 for message in st.session_state.messages:
